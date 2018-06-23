@@ -12,8 +12,7 @@
     <!-- 加载配置文件 -->
     <context:property-placeholder location="classpath:conf/*.properties"/>
     <!-- 数据库连接池 -->
-    <!--<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">-->
-    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">
+    <bean id="dataSource_webexample" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
         <property name="url" value="${jdbc.webexample.url}"/>
         <property name="username" value="${jdbc.webexample.username}"/>
         <property name="password" value="${jdbc.webexample.password}"/>
@@ -33,6 +32,29 @@
         <!--<property name="testWhileIdle" value="true"/>-->
         <!--<property name="testOnBorrow" value="true"/>-->
         <!--<property name="testOnReturn" value="false"/>-->
+    </bean>
+
+    <bean id="dataSource_error" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">
+        <property name="url" value="${jdbc.error.url}"/>
+        <property name="username" value="${jdbc.error.username}"/>
+        <property name="password" value="${jdbc.error.password}"/>
+        <property name="driverClassName" value="${jdbc.error.driver}"/>
+        <property name="maxActive" value="${jdbc.maxActive}"/>
+        <property name="minIdle" value="${jdbc.minIdle}"/>
+    </bean>
+
+    <!-- 多数据源使用 注解+aspectj 来动态切换。如需更改或添加数据源，在完成此处配置后，移步到
+          com.wanggs.webexample.dynamicds.DataSourceType 添加一个枚举值，name值要和下面的key值相同 -->
+    <!-- 在RoutingDataSource类中读取 当前的返回值 并匹配key值 选择你的数据库源-->
+    <bean id="dataSource" class="com.wanggs.webexample.dynamicds.RoutingDataSource">
+        <!-- 如需更改默认数据源，请一并更改@ChooseDataSource的默认值，以及RoutingDataSource中的默认值 -->
+        <property name="defaultTargetDataSource" ref="dataSource_webexample" />
+        <property name="targetDataSources">
+            <map key-type="java.lang.String">
+                <entry key="dataSource_webexample" value-ref="dataSource_webexample" />
+                <entry key="dataSource_error" value-ref="dataSource_error" />
+            </map>
+        </property>
     </bean>
 
     <!-- 定义事务管理器 -->
@@ -62,13 +84,5 @@
     </bean>
 
     <aop:aspectj-autoproxy expose-proxy="true"></aop:aspectj-autoproxy>
-
-    <!--Quartz集群的配置-->
-    <!--   <context:component-scan base-package="com.wangjubao.com.wangjubao.newbuyerfilter.datasync.quartz"></context:component-scan>
-       <bean id="schedulerFactoryBean" lazy-init="false" autowire="no"  class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
-           <property name="dataSource" ref="dataSource_local"></property>
-           <property name="configLocation" value="classpath:conf/quartz.properties" />
-           <property name="applicationContextSchedulerContextKey" value="applicationContext" />
-       </bean>-->
 
 </beans>

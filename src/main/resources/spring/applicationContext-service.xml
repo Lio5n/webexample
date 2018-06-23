@@ -14,6 +14,7 @@
     <context:component-scan base-package="com.wanggs.webexample.controller"/>
     <context:component-scan base-package="com.wanggs.webexample.dao"/>
     <context:component-scan base-package="com.wanggs.webexample.service"/>
+    <context:component-scan base-package="com.wanggs.webexample.dynamicds"/>
 
     <!--<import resource="applicationContext-dao.xml"/>-->
     <!--<context:component-scan base-package="com.wangjubao.dolphin.autoctd.task"/>-->
@@ -24,7 +25,7 @@
     <dubbo:registry protocol="zookeeper" address="192.168.25.160:2181" />&lt;!&ndash; 用dubbo协议在20880端口暴露服务 &ndash;&gt;
     <dubbo:protocol name="dubbo" port="20880" />
     &lt;!&ndash; 声明需要暴露的服务接口 &ndash;&gt;
-    <dubbo:service interface="com.wangjubao.newbuyerfilter.datasync.service" ref="" timeout="600000"/>
+    <dubbo:service interface="com.wanggs.webexample.service" ref="" timeout="600000"/>
     -->
 
 </beans>

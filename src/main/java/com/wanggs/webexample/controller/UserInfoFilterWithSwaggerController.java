@@ -2,7 +2,6 @@ package com.wanggs.webexample.controller;
 
 import com.wanggs.webexample.dao.pojo.UserInfo;
 import com.wanggs.webexample.service.FilterServiceInf;
-import com.wanggs.webexample.service.UserInfoFilterServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

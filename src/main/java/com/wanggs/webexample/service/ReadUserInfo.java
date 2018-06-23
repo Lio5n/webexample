@@ -3,12 +3,15 @@ package com.wanggs.webexample.service;
 import com.wanggs.webexample.dao.mapper.UserInfoMapper;
 import com.wanggs.webexample.dao.pojo.UserInfo;
 import com.wanggs.webexample.dao.pojo.UserInfoExample;
+import com.wanggs.webexample.dynamicds.ChooseDataSource;
+import com.wanggs.webexample.dynamicds.DataSourceType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
+@ChooseDataSource(DataSourceType.DEFAULT)
 public class ReadUserInfo {
 
     @Autowired
