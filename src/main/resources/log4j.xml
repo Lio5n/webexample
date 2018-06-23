@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>    
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+	<!-- ===================================================================== -->
+	<!-- 以下是appender的定义 -->
+	<!-- ===================================================================== -->
+	<appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+		<param name="encoding" value="UTF-8" />
+		<param name="Threshold" value="INFO" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="【 %d{MM-dd HH:mm:ss:sss\} 】%p[%t]-%C{1}.%M(%L)(%r) | %m%n" />
+		</layout>
+	</appender>
+
+	<appender name="FILE" class="org.apache.log4j.RollingFileAppender">
+		<param name="file" value="/home/wanggs/webexample/logs/webexample_action.log" />
+		<param name="append" value="true" />
+		<param name="encoding" value="UTF-8" />
+		<param name="MaxFileSize" value="100MB" />
+		<param name="MaxBackupIndex" value="10" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="【 %d{MM-dd HH:mm:ss:sss\} 】%p[%t]-%C{1}.%M(%L)(%r) | %m%n" />
+		</layout>
+	</appender>
+
+	<appender name="SHOW-SQL" class="org.apache.log4j.RollingFileAppender">
+		<param name="file" value="/home/wanggs/webexample/logs/webexample_slow_sql.log" />
+		<param name="append" value="true" />
+		<param name="encoding" value="UTF-8" />
+		<param name="MaxFileSize" value="50MB" />
+		<param name="MaxBackupIndex" value="10" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="【 %d{MM-dd HH:mm:ss:sss\} 】%p[%t]-%C{1}.%M(%L)(%r) | %m%n" />
+		</layout>
+	</appender>
+
+	<logger name="org.springframework" additivity="false">
+		<level value="WARN" />
+		<appender-ref ref="FILE" />
+		<appender-ref ref="CONSOLE" />
+	</logger>
+
+	<logger name="com.ibatis" additivity="true">
+		<level value="WARN" />
+		<appender-ref ref="FILE" />
+		<appender-ref ref="CONSOLE" />
+	</logger>
+
+	<logger name="java.sql" additivity="true">
+		<level value="WARN" />
+		<appender-ref ref="FILE" />
+		<appender-ref ref="CONSOLE" />
+	</logger>
+
+	<logger name="com.alibaba.druid.filter.stat.StatFilter" additivity="false">
+		<level value="WARN" />
+		<appender-ref ref="SHOW-SQL" />
+	</logger>
+ 
+
+	<logger name="com.wanggs" additivity="true">
+		<level value="INFO" />
+		<appender-ref ref="FILE" />
+	</logger> 
+	<!-- ===================================================================== -->
+	<!-- Root logger的定义 -->
+	<!-- ===================================================================== -->
+	<root>
+		<level value="INFO" />
+		<appender-ref ref="CONSOLE" />
+	</root>
+</log4j:configuration>

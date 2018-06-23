@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.2.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.2.xsd">
+
+    <!-- 加载配置文件 -->
+    <context:property-placeholder location="classpath:conf/*.properties"/>
+    <!-- 数据库连接池 -->
+    <!--<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">-->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">
+        <property name="url" value="${jdbc.webexample.url}"/>
+        <property name="username" value="${jdbc.webexample.username}"/>
+        <property name="password" value="${jdbc.webexample.password}"/>
+        <property name="driverClassName" value="${jdbc.webexample.driver}"/>
+
+        <!--<property name="initialSize" value="${jdbc.initialSize}"/>-->
+        <property name="maxActive" value="${jdbc.maxActive}"/>
+        <!--<property name="maxWait" value="${jdbc.maxWait}"/>-->
+        <property name="minIdle" value="${jdbc.minIdle}"/>
+
+        <!--<property name="removeAbandoned" value="true" />-->
+        <!--<property name="removeAbandonedTimeout" value="7200" />-->
+
+        <!--<property name="timeBetweenEvictionRunsMillis" value="3000"/>-->
+        <!--<property name="minEvictableIdleTimeMillis" value="300000"/>-->
+        <!--<property name="validationQuery" value="SELECT 1"/>-->
+        <!--<property name="testWhileIdle" value="true"/>-->
+        <!--<property name="testOnBorrow" value="true"/>-->
+        <!--<property name="testOnReturn" value="false"/>-->
+    </bean>
+
+    <!-- 定义事务管理器 -->
+    <bean id="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <!--使用注释事务 -->
+    <!-- order="2"，指定事务开启时的时机。要在开启事务前切换数据源，切换数据源切面的order值要小于此处的值 -->
+    <tx:annotation-driven transaction-manager="transactionManager" order="2"/>
+
+    <bean id="jdbcTemplate"
+          class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+
+
+    <!-- 让spring管理sqlsessionfactory 使用mybatis和spring整合包中的 -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!-- 数据库连接池 -->
+        <property name="dataSource" ref="dataSource"/>
+        <!-- 加载mybatis的全局配置文件 -->
+        <property name="configLocation" value="classpath:mybatis/SqlMapConfig.xml"/>
+    </bean>
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.wanggs.webexample.dao.mapper"/>
+    </bean>
+
+    <aop:aspectj-autoproxy expose-proxy="true"></aop:aspectj-autoproxy>
+
+    <!--Quartz集群的配置-->
+    <!--   <context:component-scan base-package="com.wangjubao.com.wangjubao.newbuyerfilter.datasync.quartz"></context:component-scan>
+       <bean id="schedulerFactoryBean" lazy-init="false" autowire="no"  class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+           <property name="dataSource" ref="dataSource_local"></property>
+           <property name="configLocation" value="classpath:conf/quartz.properties" />
+           <property name="applicationContextSchedulerContextKey" value="applicationContext" />
+       </bean>-->
+
+</beans>
